@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<VTKFile type="Collection" version="0.1" byte_order="LittleEndian" compressor="vtkZLibDataCompressor">
+  <Collection>
+    <DataSet timestep="0" group="" part="0" file="3D_deep_BHE_CXA_ts_0_t_0.000000.vtu"/>
+    <DataSet timestep="3600" group="" part="0" file="3D_deep_BHE_CXA_ts_1_t_3600.000000.vtu"/>
+    <DataSet timestep="7200" group="" part="0" file="3D_deep_BHE_CXA_ts_2_t_7200.000000.vtu"/>
+    <DataSet timestep="10800" group="" part="0" file="3D_deep_BHE_CXA_ts_3_t_10800.000000.vtu"/>
+    <DataSet timestep="14400" group="" part="0" file="3D_deep_BHE_CXA_ts_4_t_14400.000000.vtu"/>
+    <DataSet timestep="18000" group="" part="0" file="3D_deep_BHE_CXA_ts_5_t_18000.000000.vtu"/>
+  </Collection>
+</VTKFile>
