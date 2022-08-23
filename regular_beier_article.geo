@@ -5,9 +5,9 @@ Point(1) = {20, 40, 0, 40};
 Point(2) = {-20, 40, 0, 40};
 Point(3) = {-20, 0, 0, 40};
 Point(4) = {20, 0, 0, 40};
-Point(5) = {0, 20, 0, 1};
+Point(5) = {0, 20, 0, 0.2};
 
-Point(6) = {0, 20, 0, 1};
+Point(6) = {0, 20, -17, 1};
 Point(7) = {0, 20, -185, 1};
 
 Line(1) = {1, 2};
@@ -27,9 +27,7 @@ Transfinite Curve {3, 2, 1, 4} = 6 Using Progression 1;
 
 
 
-
-Volume(1) = {1};
 Line{5} In Volume{1};
 
-Physical Curve("BHE_1", 8) = {5};
-Physical Volume("BHE_soil", 9) = {1};
+Physical Curve("BHE_1", 1) = {5};
+Physical Volume("BHE_soil", 2) = {1};
