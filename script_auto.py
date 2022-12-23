@@ -3,24 +3,17 @@ import shutil
 import time
 import pandas as pd
 
-def m():
-
-    for f in os.listdir(r'D:\test_auto'):
-        path_ = r'D:\test_auto\{}'.format(f)
-        os.chdir(path_)
-        os.system('cmd /c "ogs 3D_deep_BHE_CXA.prj"')
 
 
-
-def gml_creator(bottom_depth):
+def gml_creator(n, bottom_depth):
     script = '''<?xml version="1.0" encoding="ISO-8859-1"?>
 <?xml-stylesheet type="text/xsl" href="OpenGeoSysGLI.xsl"?>
 
 <OpenGeoSysGLI xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.opengeosys.org/images/xsd/OpenGeoSysGLI.xsd" xmlns:ogs="http://www.opengeosys.org">
     <name>beier_sandbox</name>
     <points>
-        <point id="0" x="0.0" y="10.0" z="-{}" name="BHE_BOTTOM"/>
-        <point id="1" x="0.0" y="10.0" z="0" name="BHE_TOP"/>
+        <point id="0" x="0.0" y="20.0" z="-{}" name="BHE_BOTTOM"/>
+        <point id="1" x="0.0" y="20.0" z="0" name="BHE_TOP"/>
     </points>
     <polylines>
         <polyline id="0" name="BHE_1">
@@ -30,14 +23,14 @@ def gml_creator(bottom_depth):
     </polylines>
 </OpenGeoSysGLI>'''.format(bottom_depth)
                 
-    f = open("3D_deep_BHE_{}.gml".format(bottom_depth), "w")
+    f = open("3D_deep_BHE_{}.gml".format(n), "w")
     f.write(script)
     f.close()
 
-    gml_file_name = "3D_deep_BHE_{}".format(bottom_depth)
+    gml_file_name = "3D_deep_BHE_{}".format(n)
     return gml_file_name
 
-def geo_creator(bottom_depth):
+def geo_creator(n, bottom_depth):
     script = '''// Gmsh project created on Thu Nov 04 10:01:46 2021
 SetFactory("OpenCASCADE");
 
@@ -72,11 +65,11 @@ Line{5} In Volume{1};
 Physical Curve("BHE_1", 1) = {5};
 Physical Volume("BHE_soil", 2) = {1};''' % (bottom_depth,bottom_depth,bottom_depth)
 
-    f = open("3D_deep_BHE_{}.geo".format(bottom_depth), "w")
+    f = open("3D_deep_BHE_{}.geo".format(n), "w")
     f.write(script)
     f.close()
     
-    geo_file_name = "3D_deep_BHE_{}".format(bottom_depth)
+    geo_file_name = "3D_deep_BHE_{}".format(n)
     return geo_file_name
     
 def msh_to_vtu(geo_file):
@@ -88,7 +81,7 @@ def folder_creator(no):
     directory = "Sample_%s" % no
 
     # Parent Directory path
-    parent_dir = r"D:\thesis\automation"
+    parent_dir = r"D:\YasinAhmadpoor\thesis\automation"
 
     # Path
     path = os.path.join(parent_dir, directory)    
@@ -139,7 +132,7 @@ def prj_creator(vtu_file,gml_file,flow_rate,depth,diameter,outer_diameter,outer_
                         <outer>
                             <diameter> {5}</diameter> 
                             <wall_thickness>{6}</wall_thickness>
-                            <wall_thermal_conductivity>2</wall_thermal_conductivity>
+                            <wall_thermal_conductivity>45</wall_thermal_conductivity>
                         </outer>
                         <inner>
                             <diameter>{7}</diameter>  
@@ -244,7 +237,7 @@ def prj_creator(vtu_file,gml_file,flow_rate,depth,diameter,outer_diameter,outer_
                 <convergence_criterion>
                     <type>DeltaX</type>
                     <norm_type>NORM2</norm_type>
-                    <reltol>1e-10</reltol>
+                    <reltol>1e-5</reltol>
                 </convergence_criterion>
                 <time_discretization>
                     <type>BackwardEuler</type>
@@ -252,11 +245,11 @@ def prj_creator(vtu_file,gml_file,flow_rate,depth,diameter,outer_diameter,outer_
                 <time_stepping>
                     <type>FixedTimeStepping</type>
                     <t_initial> 0.0 </t_initial>
-                    <t_end> 360000 </t_end>
+                    <t_end> 8640000 </t_end>
                     <timesteps>
                         <pair>
-                            <repeat>600</repeat>
-                            <delta_t>600</delta_t>
+                            <repeat>100</repeat>
+                            <delta_t>86400</delta_t>
                         </pair>
                     </timesteps>
                 </time_stepping>
@@ -333,7 +326,7 @@ def prj_creator(vtu_file,gml_file,flow_rate,depth,diameter,outer_diameter,outer_
     <curves>
         <curve>
             <name>inflow_temperature</name>
-            <coords>0  360000
+            <coords>0  8640000
             </coords>
             <values>{18}  {18}
             </values>
@@ -351,29 +344,32 @@ def prj_creator(vtu_file,gml_file,flow_rate,depth,diameter,outer_diameter,outer_
     f = open("3D_deep_BHE_{}.prj".format(n), "w")
     f.write(script)
     f.close()
-    prj_file_name = "3D_deep_BHE_{}.prj".format(n)
+    prj_file_name = "3D_deep_BHE_{}".format(n)
     
     return prj_file_name
 
     
 if __name__ == '__main__':
-    dataset = pd.read_csv(r'D:\thesis\automation\Dataset_SenAna.csv')
+    dataset = pd.read_csv(r'D:\YasinAhmadpoor\thesis\automation\Dataset_SenAna.csv')
     n = 1
     for index, row in dataset.iterrows():
         path = folder_creator(n)
-        original_ogs = r'D:\thesis\automation\ogs.exe'
-        original_python37 = r'D:\thesis\automation\python37.dll'
-        original_GMSH2OGS = r'D:\thesis\automation\GMSH2OGS.exe'
+        original_ogs = r'D:\YasinAhmadpoor\thesis\automation\ogs.exe'
+        original_python37 = r'D:\YasinAhmadpoor\thesis\automation\python37.dll'
+        original_GMSH2OGS = r'D:\YasinAhmadpoor\thesis\automation\GMSH2OGS.exe'
+        original_gmsh = r'D:\YasinAhmadpoor\thesis\automation\gmsh.exe'
 
         shutil.copyfile(original_ogs, path + '\ogs.exe')
         shutil.copyfile(original_python37, path + '\python37.dll')
         shutil.copyfile(original_GMSH2OGS, path + '\GMSH2OGS.exe')
+        shutil.copyfile(original_gmsh, path + '\gmsh.exe')
         os.chdir(path)
-        gml_file_name = gml_creator(n)
-        geo_file_name = geo_creator(n)
+        gml_file_name = gml_creator(n, row['depth'])
+        geo_file_name = geo_creator(n, row['depth'])
         print(os.getcwd())
-        geo_file_path = path + geo_file_name
-        os.system(f'gmsh -3 D:\\thesis\\automation\\Sample_3\\3D_deep_BHE_3.geo -o D:\\thesis\\automation\\Sample_3\\3D_deep_BHE_3.msh -format msh2')
+        geo_file_path = path + '\\' + geo_file_name
+        geo_to_msh = 'gmsh -3 {}.geo -o {}.msh -format msh2'.format(geo_file_path,geo_file_path)
+        os.system(geo_to_msh)
         msh_to_vtu(geo_file_name)
         print(geo_file_name)
         prj_file_name = prj_creator(geo_file_name,gml_file_name,row['fluid_flow_rate'],row['depth'],
@@ -384,5 +380,6 @@ if __name__ == '__main__':
                                     row['fluid_thermal_conductivity'], row['formation_specific_heat_capacity'],
                                     row['formation_density'], row['formation_thermal_conductivity'],
                                     row['geothermal_gradient'],row['inlet_fluid_temperature'], n)
-        # os.system('cmd /c "ogs {}"'.format(prj_file_name))
+        os.system('cmd /c "ogs {}.prj"'.format(prj_file_name))
         n += 1
+        
